@@ -305,7 +305,7 @@ module AgloCLI
                    .concat(COMMON_DOCKER_EXEC)
                    .concat(config.volume_options)
                    .concat([DOCKER_IMAGE])
-                   .concat(["unzipKeys", "--verbose", "--detect-tags"])
+                   .concat(["unzipKeys", "--verbose", "--detect-tags", "--ignore-invalid-source-keys"])
                    .concat([config.filenames_options, config.locales_options])
                    .concat(["/content", "/sources"])
                    .flatten
