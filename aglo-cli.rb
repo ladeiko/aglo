@@ -331,6 +331,26 @@ module AgloCLI
         end
       end
 
+      class Sync < Dry::CLI::Command
+        desc "Sync new keys from project source strings files into content single Localizable.strings and pull localizations"
+
+        option :config_path, desc: "Configuration file (#{CONFIG_NAME} by default)"
+
+        def call(config_path: nil, **options)
+          config = AgloCLI::Config.new(config_path)          
+          system []
+                   .concat(COMMON_DOCKER_EXEC)
+                   .concat(config.volume_options)
+                   .concat([DOCKER_IMAGE])
+                   .concat(["sync", "--verbose"])
+                   .concat([config.filenames_options, config.locales_options])
+                   .concat(["/sources", "/content"])
+                   .flatten
+                   .join(" ")
+          abort("FAILED") if $?.exitstatus != 0
+        end
+      end
+
       class Doctor < Dry::CLI::Command
         desc "Fixes some issues in project strings files"
 
@@ -893,6 +913,7 @@ module AgloCLI
       register "version", Version, aliases: ["v", "-v", "--version"]
       register "push", Push
       register "pull", Pull
+      register "sync", Sync
       register "validate", Validate
       register "set-value", SetValue, aliases: ['setValue']
       register "set-comment", SetComment, aliases: ['setComment']
