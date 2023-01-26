@@ -1,0 +1,11 @@
+sources:
+    - ./app_folder
+include: []
+no_merge: true
+content: ./content_loc_folder
+locales:
+    - de
+    - en
+    - es
+    - fr
+    - nl
