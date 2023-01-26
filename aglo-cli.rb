@@ -78,6 +78,7 @@ content_file: Localizable       # name of file in contents folder, by default is
 locales:                        # List of locales to scan
     - ru
     - en
+no_merge: false
 clone_locale:
     zh: ru                      # will clone ru -> zh
 }
@@ -158,6 +159,12 @@ module AgloCLI
         end
       end
 
+      @no_merge = false
+
+      if [true, false].include?(config["no_merge"])
+        @no_merge = config["no_merge"]
+      end
+
       @volume_options = volume_options
       @filenames_options = filenames_options
       @locales_options = locales_options
@@ -168,6 +175,7 @@ module AgloCLI
     attr_reader :locales_options
     attr_reader :clone_locale
     attr_reader :content_file
+    attr_reader :no_merge
   end
 end
 
@@ -343,6 +351,7 @@ module AgloCLI
                    .concat(config.volume_options)
                    .concat([DOCKER_IMAGE])
                    .concat(["sync", "--verbose"])
+                   .concat(config.no_merge ? ["--no-merge"] : [])
                    .concat([config.filenames_options, config.locales_options])
                    .concat(["/sources", "/content"])
                    .flatten
