@@ -25,7 +25,7 @@ then
     docker image tag aglo-cli-amd64.slim aglo-cli.slim
 fi
 
-if [ "$arch" == 'arm*' ];
+if [ "$arch" == 'arm64' ];
 then
     curl "https://raw.githubusercontent.com/ladeiko/aglo/main/aglo-cli-arm64.tar" -o "${TMP_DIR}/aglo-cli-arm64.tar"
     docker rmi --force aglo-cli.slim &>/dev/null || true
