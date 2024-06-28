@@ -14,6 +14,8 @@ TMP_DIR=$(mktemp -d -t ci-aglo-cli)
 
 trap "rm -rf ${TMP_DIR}" SIGINT SIGTERM ERR EXIT
 
+arch=$(uname -m)
+
 if [ "$arch" == 'x86_64' ];
 then 
     curl "https://raw.githubusercontent.com/ladeiko/aglo/main/aglo-cli-amd64.tar" -o "${TMP_DIR}/aglo-cli-amd64.tar"
