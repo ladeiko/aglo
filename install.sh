@@ -14,10 +14,24 @@ TMP_DIR=$(mktemp -d -t ci-aglo-cli)
 
 trap "rm -rf ${TMP_DIR}" SIGINT SIGTERM ERR EXIT
 
-curl "https://raw.githubusercontent.com/ladeiko/aglo/main/aglo-cli.tar" -o "${TMP_DIR}/aglo-cli.tar"
+if [ "$arch" == 'x86_64' ];
+then 
+    curl "https://raw.githubusercontent.com/ladeiko/aglo/main/aglo-cli-amd64.tar" -o "${TMP_DIR}/aglo-cli-amd64.tar"
+    docker rmi --force aglo-cli.slim &>/dev/null || true
+    docker rmi --force aglo-cli-amd64.slim &>/dev/null || true
+    docker load -i "${TMP_DIR}/aglo-cli-amd64.tar"
+    docker image tag aglo-cli-amd64.slim aglo-cli.slim
+fi
 
-docker rmi aglo-cli.slim &>/dev/null || true
-docker load -i "${TMP_DIR}/aglo-cli.tar"
+if [ "$arch" == 'arm*' ];
+then
+    curl "https://raw.githubusercontent.com/ladeiko/aglo/main/aglo-cli-arm64.tar" -o "${TMP_DIR}/aglo-cli-arm64.tar"
+    docker rmi --force aglo-cli.slim &>/dev/null || true
+    docker rmi --force aglo-cli-arm64.slim &>/dev/null || true
+    docker load -i "${TMP_DIR}/aglo-cli-arm64.tar"
+    docker image tag aglo-cli-arm64.slim aglo-cli.slim
+fi
+
 
 curl "https://raw.githubusercontent.com/ladeiko/aglo/main/aglo-cli.rb" -o /usr/local/bin/aglo-cli
 chmod +x /usr/local/bin/aglo-cli
